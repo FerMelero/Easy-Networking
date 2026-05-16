@@ -1,0 +1,26 @@
+/* Importamos Tailwind */
+@import "tailwindcss";
+
+/* Definimos nuestros componentes personalizados reutilizando Tailwind */
+@layer components {
+    
+    .panel-cyber {
+        @apply bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl;
+    }
+
+    .input-cyber {
+        @apply w-full bg-slate-950 border border-slate-700 rounded-lg py-3 px-4 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 font-mono transition;
+    }
+
+    .select-cyber {
+        @apply w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-300 focus:outline-none focus:border-red-500 font-mono text-sm;
+    }
+
+    .checkbox-card-cyber {
+        @apply flex items-center p-3 bg-slate-950 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700 transition;
+    }
+
+    .btn-cyber {
+        @apply w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg shadow-red-900/30 transition transform active:scale-95 cursor-pointer;
+    }
+}

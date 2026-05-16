@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetPulse - Configurar Escaneo</title>
+    <!-- Tailwind CSS CDN para estilos rápidos y limpios -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Iconos de FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar / Encabezado -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-heart-pulse text-red-500 text-2xl animate-pulse"></i>
+            <h1 class="text-xl font-bold tracking-wider text-white">NET<span class="text-red-500">PULSE</span></h1>
+        </div>
+        <nav class="flex gap-4">
+            <a href="#" class="text-sm font-medium text-red-400 border-b-2 border-red-500 pb-1">Nuevo Escaneo</a>
+            <a href="#" class="text-sm font-medium text-slate-400 hover:text-white transition">Histórico</a>
+        </nav>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-6 my-6">
+        
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-white mb-2">Lanzar Auditoría de Red</h2>
+            <p class="text-slate-400 text-sm">Configura los parámetros tácticos para el reconocimiento activo sobre el objetivo.</p>
+        </div>
+
+        <!-- Formulario de Configuración -->
+        <form action="/scan/execute" method="POST" class="space-y-6">
+            
+            <!-- Target Input (IP / Rango) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+                <label for="target" class="block text-sm font-semibold text-slate-300 mb-3 uppercase tracking-wider">
+                    <i class="fa-solid fa-crosshairs text-red-500 mr-2"></i> Dirección Objetivo (Target)
+                </label>
+                <div class="relative">
+                    <input type="text" id="target" name="target" placeholder="ej. 192.168.1.1 o 10.0.0.0/24" required
+                        class="w-full bg-slate-950 border border-slate-700 rounded-lg py-3 px-4 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 font-mono transition">
+                </div>
+                <p class="text-xs text-slate-500 mt-2">Soporta direcciones IP individuales, nombres de dominio o rangos CIDR.</p>
+            </div>
+
+            <!-- Opciones Avanzadas (Mapeo de Flags de Nmap) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
+                <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider border-b border-slate-800 pb-3">
+                    <i class="fa-solid fa-sliders text-red-500 mr-2"></i> Parámetros de Escaneo (Flags de Nmap)
+                </h3>
+
+                <!-- Fila 1: Tipo de escaneo y Timing -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Scan Type -->
+                    <div>
+                        <label for="scan_type" class="block text-xs font-medium text-slate-400 mb-2 uppercase">Técnica de Conexión</label>
+                        <select id="scan_type" name="scan_type" 
+                            class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-300 focus:outline-none focus:border-red-500 font-mono text-sm">
+                            <option value="sT">TCP Connect Scan (-sT) - Normal</option>
+                            <option value="sS" selected>SYN Stealth Scan (-sS) - Sigiloso</option>
+                            <option value="sU">UDP Scan (-sU) - Puertos UDP</option>
+                        </select>
+                    </div>
+
+                    <!-- Timing Intensity -->
+                    <div>
+                        <label for="timing" class="block text-xs font-medium text-slate-400 mb-2 uppercase">Intensidad del Tiempo (Timing)</label>
+                        <select id="timing" name="timing" 
+                            class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-300 focus:outline-none focus:border-red-500 font-mono text-sm">
+                            <option value="T2">Polite (-T2) - Muy lento, evita sospechas</option>
+                            <option value="T3">Normal (-T3) - Velocidad estándar</option>
+                            <option value="T4" selected>Aggressive (-T4) - Rápido y recomendado</option>
+                            <option value="T5">Insane (-T5) - Ultra rápido (puede perder paquetes)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fila 2: Rango de Puertos -->
+                <div>
+                    <label for="ports" class="block text-xs font-medium text-slate-400 mb-2 uppercase">Rango de Puertos</label>
+                    <select id="ports" name="ports" 
+                        class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-300 focus:outline-none focus:border-red-500 font-mono text-sm">
+                        <option value="top1000" selected>Top 1000 puertos comunes (Rápido)</option>
+                        <option value="all">Todos los puertos (1-65535) (-p-)</option>
+                        <option value="custom">Personalizado (Ej: 22,80,443)</option>
+                    </select>
+                </div>
+
+                <!-- Switches / Checkboxes para Flags de Agresividad y Evasión -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    
+                    <!-- Detect OS (-O) -->
+                    <label class="flex items-center p-3 bg-slate-950 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700 transition">
+                        <input type="checkbox" name="detect_os" value="1" class="accent-red-500 h-4 w-4 rounded">
+                        <div class="ml-3">
+                            <span class="block text-sm font-medium text-slate-200">Huella Digital del SO (-O)</span>
+                            <span class="block text-xs text-slate-500">Intenta identificar el Sistema Operativo.</span>
+                        </div>
+                    </label>
+
+                    <!-- Service Versions (-sV) -->
+                    <label class="flex items-center p-3 bg-slate-950 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700 transition">
+                        <input type="checkbox" name="detect_version" value="1" checked class="accent-red-500 h-4 w-4 rounded">
+                        <div class="ml-3">
+                            <span class="block text-sm font-medium text-slate-200">Versión de Servicios (-sV)</span>
+                            <span class="block text-xs text-slate-500">Detecta la aplicación exacta detrás del puerto.</span>
+                        </div>
+                    </label>
+
+                    <!-- Script Vuln (--script=vuln) -->
+                    <label class="flex items-center p-3 bg-slate-950 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700 transition">
+                        <input type="checkbox" name="scan_vuln" value="1" class="accent-red-500 h-4 w-4 rounded">
+                        <div class="ml-3">
+                            <span class="block text-sm font-medium text-slate-200">Auditar Vulnerabilidades (--script=vuln)</span>
+                            <span class="block text-xs text-slate-500">Lanza el motor NSE para buscar vulnerabilidades críticas.</span>
+                        </div>
+                    </label>
+
+                    <!-- Fragment Packets (-f) -->
+                    <label class="flex items-center p-3 bg-slate-950 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700 transition">
+                        <input type="checkbox" name="fragment" value="1" class="accent-red-500 h-4 w-4 rounded">
+                        <div class="ml-3">
+                            <span class="block text-sm font-medium text-slate-200">Fragmentación de Paquetes (-f)</span>
+                            <span class="block text-xs text-slate-500">Técnica de evasión para burlar Firewalls simples.</span>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- Botón de Envío -->
+            <div class="flex justify-end">
+                <button type="submit" 
+                    class="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg shadow-red-900/30 transition transform active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-play mr-2 text-sm"></i> Inicializar Escaneo Asíncrono
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 px-6 py-4 text-center text-xs text-slate-600">
+        NetPulse Automation Security Suite Engine • 2026
+    </footer>
+
+</body>
+</html>
